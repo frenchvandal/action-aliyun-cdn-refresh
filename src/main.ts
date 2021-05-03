@@ -45,7 +45,7 @@ const accessKeySecret: string = getInput('accessKeySecret', { required: true });
       accessKeySecret,
     ]);
 
-    exec('aliyun', ['DescribeRefreshQuota'], options);
+    exec('aliyun', ['cdn', 'DescribeRefreshQuota'], options);
 
     info(`${output}`);
 

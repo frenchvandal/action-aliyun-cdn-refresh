@@ -1764,7 +1764,7 @@ const accessKeySecret = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)(
             '--access-key-secret',
             accessKeySecret,
         ]);
-        (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)('aliyun', ['DescribeRefreshQuota'], options);
+        (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)('aliyun', ['cdn', 'DescribeRefreshQuota'], options);
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`${output}`);
         const quota = JSON.parse(output);
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`${quota.UrlRemain}`);
