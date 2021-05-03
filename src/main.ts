@@ -1,4 +1,4 @@
-import { info } from '@actions/core';
+import { getInput, info } from '@actions/core';
 import { exec, ExecOptions } from '@actions/exec';
 
 interface RefreshQuota {
@@ -17,6 +17,9 @@ interface RefreshQuota {
   UrlRemain: string;
 }
 
+const accessKeyId: string = getInput('accessKeyId', { required: true });
+const accessKeySecret: string = getInput('accessKeySecret', { required: true });
+
 (async (): Promise<void> => {
   try {
     let output = '';
@@ -27,6 +30,20 @@ interface RefreshQuota {
         output += data.toString();
       },
     };
+    exec('aliyun', [
+      'configure',
+      'set',
+      '--profile',
+      'akProfile',
+      '--mode',
+      'AK',
+      '--region',
+      'eu-west-1',
+      '--access-key-id',
+      accessKeyId,
+      '--access-key-secret',
+      accessKeySecret,
+    ]);
 
     exec('aliyun', ['DescribeRefreshQuota'], options);
 

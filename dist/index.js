@@ -1739,6 +1739,8 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_1__);
 
 
+const accessKeyId = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeyId', { required: true });
+const accessKeySecret = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeySecret', { required: true });
 (async () => {
     try {
         let output = '';
@@ -1748,6 +1750,20 @@ __nccwpck_require__.r(__webpack_exports__);
                 output += data.toString();
             },
         };
+        (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)('aliyun', [
+            'configure',
+            'set',
+            '--profile',
+            'akProfile',
+            '--mode',
+            'AK',
+            '--region',
+            'eu-west-1',
+            '--access-key-id',
+            accessKeyId,
+            '--access-key-secret',
+            accessKeySecret,
+        ]);
         (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)('aliyun', ['DescribeRefreshQuota'], options);
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`${output}`);
         const quota = JSON.parse(output);
