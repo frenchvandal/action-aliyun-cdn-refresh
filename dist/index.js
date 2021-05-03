@@ -24015,12 +24015,18 @@ __nccwpck_require__.r(__webpack_exports__);
 
 const processSeparator = path__WEBPACK_IMPORTED_MODULE_4__.sep;
 const posixSeparator = path__WEBPACK_IMPORTED_MODULE_4__.posix.sep;
+(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${processSeparator}`);
+(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${posixSeparator}`);
 const homeDir = (0,path__WEBPACK_IMPORTED_MODULE_4__.join)(process.cwd(), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('source', { required: false }) || 'public', processSeparator);
+(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${homeDir}`);
 const cdnDomain = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('cdnDomain', { required: true });
+(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${cdnDomain}`);
 const credentials = new _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__.Config({
     accessKeyId: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeyId', { required: true }),
-    accessKeySecret: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeySecret', { required: true })
+    accessKeySecret: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeySecret', { required: true }),
 });
+(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${credentials.accessKeyId}`);
+(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${credentials.accessKeySecret}`);
 const client = new (_alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2___default())(credentials);
 function objectify(filePath, dir, prefix, suffix) {
     let fileToObject = filePath.split(processSeparator);

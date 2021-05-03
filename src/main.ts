@@ -1,4 +1,4 @@
-import { endGroup, getInput, info, startGroup } from '@actions/core';
+import { debug, endGroup, getInput, info, startGroup } from '@actions/core';
 import { create, Globber } from '@actions/glob';
 import Client, {
   DescribeRefreshQuotaRequest,
@@ -12,18 +12,28 @@ import { extname, join, posix, sep } from 'path';
 const processSeparator: string = sep;
 const posixSeparator: string = posix.sep;
 
+debug(`${processSeparator}`);
+debug(`${posixSeparator}`);
+
 const homeDir: string = join(
   process.cwd(),
   getInput('source', { required: false }) || 'public',
   processSeparator,
 );
 
+debug(`${homeDir}`);
+
 const cdnDomain: string = getInput('cdnDomain', { required: true });
+
+debug(`${cdnDomain}`);
 
 const credentials: Config = new Config({
   accessKeyId: getInput('accessKeyId', { required: true }),
   accessKeySecret: getInput('accessKeySecret', { required: true }),
 });
+
+debug(`${credentials.accessKeyId}`);
+debug(`${credentials.accessKeySecret}`);
 
 const client: Client = new Client(credentials);
 
