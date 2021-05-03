@@ -1,0 +1,28 @@
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+name: 'Aliyun OSS files upload'
+description: 'A GitHub Action to upload files to an Alibaba Cloud OSS bucket'
+author: 'frenchvandal'
+branding:
+  color: 'orange'
+  icon: 'cloud'
+
+inputs:
+  accessKeyId:
+    description: 'Access Key ID'
+    required: true
+  accessKeySecret:
+    description: 'Access Key secret'
+    required: true
+  endpoint:
+    description: 'Endpoint'
+    required: true
+  cdnDomain:
+    description: 'domain name with scheme'
+    required: true
+  source:
+    description: 'Source folder of files to refresh, relative to current working directory'
+    required: false
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
