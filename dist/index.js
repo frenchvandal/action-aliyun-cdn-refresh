@@ -31,21 +31,14 @@ const glob_1 = __nccwpck_require__(8090);
 const cdn20180510_1 = __importStar(__nccwpck_require__(3121));
 const openapi_client_1 = __nccwpck_require__(6642);
 const path_1 = __nccwpck_require__(5622);
-core_1.debug('START GO GO GO');
 const processSeparator = path_1.sep;
 const posixSeparator = path_1.posix.sep;
-core_1.debug(`${processSeparator}`);
-core_1.debug(`${posixSeparator}`);
 const homeDir = path_1.join(process.cwd(), core_1.getInput('source', { required: false }) || 'public', processSeparator);
-core_1.debug(`${homeDir}`);
 const cdnDomain = core_1.getInput('cdnDomain', { required: true });
-core_1.debug(`${cdnDomain}`);
 const credentials = new openapi_client_1.Config({
     accessKeyId: core_1.getInput('accessKeyId', { required: true }),
     accessKeySecret: core_1.getInput('accessKeySecret', { required: true }),
 });
-core_1.debug(`${credentials.accessKeyId}`);
-core_1.debug(`${credentials.accessKeySecret}`);
 const client = new cdn20180510_1.default(credentials);
 function objectify(filePath, dir, prefix, suffix) {
     let fileToObject = filePath.split(processSeparator);
