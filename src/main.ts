@@ -1,119 +1,40 @@
-import { endGroup, getInput, info, startGroup } from '@actions/core';
-import { create, Globber } from '@actions/glob';
-import Client, {
-  DescribeRefreshQuotaRequest,
-  DescribeRefreshQuotaResponse,
-  RefreshObjectCachesRequest,
-  RefreshObjectCachesResponse,
-} from '@alicloud/cdn20180510';
-import { Config } from '@alicloud/openapi-client';
-import { extname, join, posix, sep } from 'path';
+import { info } from '@actions/core';
+import { exec, ExecOptions } from '@actions/exec';
 
-const processSeparator: string = sep;
-const posixSeparator: string = posix.sep;
-
-const homeDir: string = join(
-  process.cwd(),
-  getInput('source', { required: false }) || 'public',
-  processSeparator,
-);
-
-const cdnDomain: string = getInput('cdnDomain', { required: true });
-
-const credentials: Config = new Config({
-  accessKeyId: getInput('accessKeyId', { required: true }),
-  accessKeySecret: getInput('accessKeySecret', { required: true }),
-});
-
-const client: Client = new Client(credentials);
-
-function objectify(
-  filePath: string,
-  dir?: string,
-  prefix?: string,
-  suffix?: string,
-): string {
-  let fileToObject: string[] = filePath.split(processSeparator);
-
-  if (dir) {
-    const removalList: string[] = dir.split(processSeparator);
-    fileToObject = fileToObject.filter((item) => !removalList.includes(item));
-  }
-
-  if (prefix) {
-    fileToObject.unshift(prefix);
-  }
-
-  if (suffix) {
-    fileToObject.push(suffix);
-  }
-
-  const objectFile: string = fileToObject.join(posixSeparator);
-
-  return objectFile;
+interface RefreshQuota {
+  BlockQuota: string;
+  BlockRemain: string;
+  DirQuota: string;
+  DirRemain: string;
+  PreloadEdgeQuota: string;
+  PreloadEdgeRemain: string;
+  PreloadQuota: string;
+  PreloadRemain: string;
+  RegexQuota: string;
+  RegexRemain: string;
+  RequestId: string;
+  UrlQuota: string;
+  UrlRemain: string;
 }
 
 (async (): Promise<void> => {
   try {
-    let index = 0;
-    let percent = 0;
+    let output = '';
 
-    const uploadDir: Globber = await create(`${homeDir}`);
-    const size: number = (await uploadDir.glob()).length;
-    const localFiles: AsyncGenerator<
-      string,
-      void,
-      unknown
-    > = uploadDir.globGenerator();
+    const options: ExecOptions = {};
+    options.listeners = {
+      stdout: (data: Buffer) => {
+        output += data.toString();
+      },
+    };
 
-    startGroup(`${size} objects to refresh`);
+    exec('aliyun', ['DescribeRefreshQuota'], options);
 
-    for await (const file of localFiles) {
-      const RefreshQuotaRequest: DescribeRefreshQuotaRequest = new DescribeRefreshQuotaRequest(
-        {},
-      );
+    info(`${output}`);
 
-      const RefreshQuotaResponse: DescribeRefreshQuotaResponse = await client.describeRefreshQuota(
-        RefreshQuotaRequest,
-      );
+    const quota: RefreshQuota = JSON.parse(output);
 
-      const remainQuota: number =
-        Number(RefreshQuotaResponse.body.urlRemain) || 0;
-
-      let trailingSlash: string | undefined;
-      if (!extname(file)) trailingSlash = processSeparator;
-
-      const objectName: string = objectify(
-        file,
-        homeDir,
-        cdnDomain,
-        trailingSlash,
-      );
-
-      if (remainQuota) {
-        const refreshRequest = new RefreshObjectCachesRequest({
-          objectPath: objectName,
-        });
-        const refreshResponse: RefreshObjectCachesResponse = await client.refreshObjectCaches(
-          refreshRequest,
-        );
-        info(
-          `\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(
-            2,
-          )}%] refreshed: ${refreshResponse.body.refreshTaskId}`,
-        );
-      } else {
-        info('Daily RefreshUrlQuota exceeded');
-        break;
-      }
-
-      index += 1;
-      percent = (index / size) * 100;
-    }
-
-    endGroup();
-
-    info(`${index} URL refreshed`);
+    info(`${quota.UrlRemain}`);
   } catch (error) {
     const { setFailed } = await import('@actions/core');
     setFailed(error.message);
