@@ -1,7 +1,7 @@
 {
   "name": "action-oss-upload",
   "description": "This GitHub Action uploads generated files to an OSS bucket",
-  "main": "lib/main.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=12.22.1",
     "npm": ">=6.14.12"
