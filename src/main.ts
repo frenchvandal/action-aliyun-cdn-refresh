@@ -22,14 +22,14 @@ const accessKeySecret: string = getInput('accessKeySecret', { required: true });
 
 (async (): Promise<void> => {
   try {
-    let output = '';
+    /*     let output = '';
 
     const options: ExecOptions = {};
     options.listeners = {
       stdout: (data: Buffer) => {
         output += data.toString();
       },
-    };
+    }; */
     exec('aliyun', [
       'configure',
       'set',
@@ -43,13 +43,13 @@ const accessKeySecret: string = getInput('accessKeySecret', { required: true });
       accessKeySecret,
     ]);
 
-    exec('aliyun', ['cdn', 'DescribeRefreshQuota'], options);
+    exec('aliyun', ['cdn', 'DescribeRefreshQuota']);
 
-    info(`${output}`);
+    //info(`${output}`);
 
-    const quota: RefreshQuota = JSON.parse(output);
+    //const quota: RefreshQuota = JSON.parse(output);
 
-    info(`${quota.UrlRemain}`);
+    //info(`${quota.UrlRemain}`);
   } catch (error) {
     const { setFailed } = await import('@actions/core');
     setFailed(error.message);

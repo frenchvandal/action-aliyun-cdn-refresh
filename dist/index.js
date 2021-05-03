@@ -1743,20 +1743,11 @@ const accessKeyId = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('acc
 const accessKeySecret = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeySecret', { required: true });
 (async () => {
     try {
-        let output = '';
-        const options = {};
-        options.listeners = {
-            stdout: (data) => {
-                output += data.toString();
-            },
-        };
         (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)('aliyun', [
             'configure',
             'set',
             '--profile',
             'akProfile',
-            '--mode',
-            'AK',
             '--region',
             'eu-west-1',
             '--access-key-id',
@@ -1764,10 +1755,7 @@ const accessKeySecret = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)(
             '--access-key-secret',
             accessKeySecret,
         ]);
-        (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)('aliyun', ['cdn', 'DescribeRefreshQuota'], options);
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`${output}`);
-        const quota = JSON.parse(output);
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`${quota.UrlRemain}`);
+        (0,_actions_exec__WEBPACK_IMPORTED_MODULE_1__.exec)('aliyun', ['cdn', 'DescribeRefreshQuota']);
     }
     catch (error) {
         const { setFailed } = await Promise.resolve(/* import() */).then(__nccwpck_require__.t.bind(__nccwpck_require__, 186, 23));
