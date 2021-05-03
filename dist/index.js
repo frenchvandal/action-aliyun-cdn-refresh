@@ -1758,7 +1758,7 @@ const accessKeySecret = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)(
             '--mode',
             'AK',
             '--region',
-            'cdn.aliyuncs.com',
+            'eu-west-1',
             '--access-key-id',
             accessKeyId,
             '--access-key-secret',
