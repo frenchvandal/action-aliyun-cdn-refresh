@@ -24019,8 +24019,7 @@ const homeDir = (0,path__WEBPACK_IMPORTED_MODULE_4__.join)(process.cwd(), (0,_ac
 const cdnDomain = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('cdnDomain', { required: true });
 const credentials = new _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__.Config({
     accessKeyId: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeyId', { required: true }),
-    accessKeySecret: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeySecret', { required: true }),
-    endpoint: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('endpoint', { required: true }),
+    accessKeySecret: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeySecret', { required: true })
 });
 const client = new (_alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2___default())(credentials);
 function objectify(filePath, dir, prefix, suffix) {

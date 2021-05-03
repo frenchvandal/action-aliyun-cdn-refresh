@@ -23,7 +23,6 @@ const cdnDomain: string = getInput('cdnDomain', { required: true });
 const credentials: Config = new Config({
   accessKeyId: getInput('accessKeyId', { required: true }),
   accessKeySecret: getInput('accessKeySecret', { required: true }),
-  endpoint: getInput('endpoint', { required: true }),
 });
 
 const client: Client = new Client(credentials);

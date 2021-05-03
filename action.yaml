@@ -15,7 +15,7 @@ inputs:
     required: true
   endpoint:
     description: 'Endpoint'
-    required: true
+    required: false
   cdnDomain:
     description: 'domain name with scheme'
     required: true
