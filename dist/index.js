@@ -24013,6 +24013,7 @@ __nccwpck_require__.r(__webpack_exports__);
 
 
 
+(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)('START GO GO GO');
 const processSeparator = path__WEBPACK_IMPORTED_MODULE_4__.sep;
 const posixSeparator = path__WEBPACK_IMPORTED_MODULE_4__.posix.sep;
 (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${processSeparator}`);

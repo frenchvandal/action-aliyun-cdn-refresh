@@ -9,6 +9,8 @@ import Client, {
 import { Config } from '@alicloud/openapi-client';
 import { extname, join, posix, sep } from 'path';
 
+debug('START GO GO GO');
+
 const processSeparator: string = sep;
 const posixSeparator: string = posix.sep;
 
