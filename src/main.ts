@@ -38,7 +38,7 @@ const accessKeySecret: string = getInput('accessKeySecret', { required: true });
       '--mode',
       'AK',
       '--region',
-      'eu-west-1',
+      'cdn.aliyuncs.com',
       '--access-key-id',
       accessKeyId,
       '--access-key-secret',
