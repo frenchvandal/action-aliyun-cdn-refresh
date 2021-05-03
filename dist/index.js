@@ -1,6 +1,109 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 3109:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core_1 = __nccwpck_require__(2186);
+const glob_1 = __nccwpck_require__(8090);
+const cdn20180510_1 = __importStar(__nccwpck_require__(3121));
+const openapi_client_1 = __nccwpck_require__(6642);
+const path_1 = __nccwpck_require__(5622);
+core_1.debug('START GO GO GO');
+const processSeparator = path_1.sep;
+const posixSeparator = path_1.posix.sep;
+core_1.debug(`${processSeparator}`);
+core_1.debug(`${posixSeparator}`);
+const homeDir = path_1.join(process.cwd(), core_1.getInput('source', { required: false }) || 'public', processSeparator);
+core_1.debug(`${homeDir}`);
+const cdnDomain = core_1.getInput('cdnDomain', { required: true });
+core_1.debug(`${cdnDomain}`);
+const credentials = new openapi_client_1.Config({
+    accessKeyId: core_1.getInput('accessKeyId', { required: true }),
+    accessKeySecret: core_1.getInput('accessKeySecret', { required: true }),
+});
+core_1.debug(`${credentials.accessKeyId}`);
+core_1.debug(`${credentials.accessKeySecret}`);
+const client = new cdn20180510_1.default(credentials);
+function objectify(filePath, dir, prefix, suffix) {
+    let fileToObject = filePath.split(processSeparator);
+    if (dir) {
+        const removalList = dir.split(processSeparator);
+        fileToObject = fileToObject.filter((item) => !removalList.includes(item));
+    }
+    if (prefix) {
+        fileToObject.unshift(prefix);
+    }
+    if (suffix) {
+        fileToObject.push(suffix);
+    }
+    const objectFile = fileToObject.join(posixSeparator);
+    return objectFile;
+}
+(async () => {
+    try {
+        let index = 0;
+        let percent = 0;
+        const uploadDir = await glob_1.create(`${homeDir}`);
+        const size = (await uploadDir.glob()).length;
+        const localFiles = uploadDir.globGenerator();
+        core_1.startGroup(`${size} objects to refresh`);
+        for await (const file of localFiles) {
+            const RefreshQuotaRequest = new cdn20180510_1.DescribeRefreshQuotaRequest({});
+            const RefreshQuotaResponse = await client.describeRefreshQuota(RefreshQuotaRequest);
+            const remainQuota = Number(RefreshQuotaResponse.body.urlRemain) || 0;
+            let trailingSlash;
+            if (!path_1.extname(file))
+                trailingSlash = processSeparator;
+            const objectName = objectify(file, homeDir, cdnDomain, trailingSlash);
+            if (remainQuota) {
+                const refreshRequest = new cdn20180510_1.RefreshObjectCachesRequest({
+                    objectPath: objectName,
+                });
+                const refreshResponse = await client.refreshObjectCaches(refreshRequest);
+                core_1.info(`\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(2)}%] refreshed: ${refreshResponse.body.refreshTaskId}`);
+            }
+            else {
+                core_1.info('Daily RefreshUrlQuota exceeded');
+                break;
+            }
+            index += 1;
+            percent = (index / size) * 100;
+        }
+        core_1.endGroup();
+        core_1.info(`${index} URL refreshed`);
+    }
+    catch (error) {
+        const { setFailed } = await Promise.resolve().then(() => __importStar(__nccwpck_require__(2186)));
+        setFailed(error.message);
+    }
+})();
+//# sourceMappingURL=main.js.map
+
+/***/ }),
+
 /***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -23920,171 +24023,15 @@ module.exports = require("zlib");;
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/create fake namespace object */
-/******/ 	(() => {
-/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
-/******/ 		var leafPrototypes;
-/******/ 		// create a fake namespace object
-/******/ 		// mode & 1: value is a module id, require it
-/******/ 		// mode & 2: merge all properties of value into the ns
-/******/ 		// mode & 4: return value when already ns object
-/******/ 		// mode & 16: return value when it's Promise-like
-/******/ 		// mode & 8|1: behave like require
-/******/ 		__nccwpck_require__.t = function(value, mode) {
-/******/ 			if(mode & 1) value = this(value);
-/******/ 			if(mode & 8) return value;
-/******/ 			if(typeof value === 'object' && value) {
-/******/ 				if((mode & 4) && value.__esModule) return value;
-/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
-/******/ 			}
-/******/ 			var ns = Object.create(null);
-/******/ 			__nccwpck_require__.r(ns);
-/******/ 			var def = {};
-/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
-/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
-/******/ 			}
-/******/ 			def['default'] = () => (value);
-/******/ 			__nccwpck_require__.d(ns, def);
-/******/ 			return ns;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_glob__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(8090);
-/* harmony import */ var _actions_glob__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_glob__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3121);
-/* harmony import */ var _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6642);
-/* harmony import */ var _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(_alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(5622);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_4__);
-
-
-
-
-
-(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)('START GO GO GO');
-const processSeparator = path__WEBPACK_IMPORTED_MODULE_4__.sep;
-const posixSeparator = path__WEBPACK_IMPORTED_MODULE_4__.posix.sep;
-(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${processSeparator}`);
-(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${posixSeparator}`);
-const homeDir = (0,path__WEBPACK_IMPORTED_MODULE_4__.join)(process.cwd(), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('source', { required: false }) || 'public', processSeparator);
-(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${homeDir}`);
-const cdnDomain = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('cdnDomain', { required: true });
-(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${cdnDomain}`);
-const credentials = new _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__.Config({
-    accessKeyId: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeyId', { required: true }),
-    accessKeySecret: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeySecret', { required: true }),
-});
-(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${credentials.accessKeyId}`);
-(0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`${credentials.accessKeySecret}`);
-const client = new (_alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2___default())(credentials);
-function objectify(filePath, dir, prefix, suffix) {
-    let fileToObject = filePath.split(processSeparator);
-    if (dir) {
-        const removalList = dir.split(processSeparator);
-        fileToObject = fileToObject.filter((item) => !removalList.includes(item));
-    }
-    if (prefix) {
-        fileToObject.unshift(prefix);
-    }
-    if (suffix) {
-        fileToObject.push(suffix);
-    }
-    const objectFile = fileToObject.join(posixSeparator);
-    return objectFile;
-}
-(async () => {
-    try {
-        let index = 0;
-        let percent = 0;
-        const uploadDir = await (0,_actions_glob__WEBPACK_IMPORTED_MODULE_1__.create)(`${homeDir}`);
-        const size = (await uploadDir.glob()).length;
-        const localFiles = uploadDir.globGenerator();
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.startGroup)(`${size} objects to refresh`);
-        for await (const file of localFiles) {
-            const RefreshQuotaRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.DescribeRefreshQuotaRequest({});
-            const RefreshQuotaResponse = await client.describeRefreshQuota(RefreshQuotaRequest);
-            const remainQuota = Number(RefreshQuotaResponse.body.urlRemain) || 0;
-            let trailingSlash;
-            if (!(0,path__WEBPACK_IMPORTED_MODULE_4__.extname)(file))
-                trailingSlash = processSeparator;
-            const objectName = objectify(file, homeDir, cdnDomain, trailingSlash);
-            if (remainQuota) {
-                const refreshRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.RefreshObjectCachesRequest({
-                    objectPath: objectName,
-                });
-                const refreshResponse = await client.refreshObjectCaches(refreshRequest);
-                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(2)}%] refreshed: ${refreshResponse.body.refreshTaskId}`);
-            }
-            else {
-                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Daily RefreshUrlQuota exceeded');
-                break;
-            }
-            index += 1;
-            percent = (index / size) * 100;
-        }
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.endGroup)();
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`${index} URL refreshed`);
-    }
-    catch (error) {
-        const { setFailed } = await Promise.resolve(/* import() */).then(__nccwpck_require__.t.bind(__nccwpck_require__, 2186, 23));
-        setFailed(error.message);
-    }
-})();
-//# sourceMappingURL=main.js.map
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(3109);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
