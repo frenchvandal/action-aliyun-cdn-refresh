@@ -24058,6 +24058,10 @@ function objectify(filePath, dir, prefix, suffix) {
             else {
                 trailingSlash = '';
             }
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`trailingSlash: ${trailingSlash}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`file: ${file}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`homeDir: ${homeDir}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`cdnDomain: ${cdnDomain}`);
             const objectName = objectify(file, homeDir, cdnDomain, trailingSlash);
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`URL: ${objectName}`);
             if (remainQuota) {

@@ -80,7 +80,7 @@ function objectify(
       const remainQuota: number =
         Number(RefreshQuotaResponse.body.urlRemain) || 0;
 
-      let trailingSlash: string;
+      let trailingSlash: string | undefined;
 
       const extension: string = extname(file);
       info(`ext: ${extension}`);
@@ -89,6 +89,10 @@ function objectify(
       } else {
         trailingSlash = '';
       }
+      info(`trailingSlash: ${trailingSlash}`);
+      info(`file: ${file}`);
+      info(`homeDir: ${homeDir}`);
+      info(`cdnDomain: ${cdnDomain}`);
 
       const objectName: string = objectify(
         file,
