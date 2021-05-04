@@ -34,20 +34,20 @@ function objectify(
   suffix?: string,
 ): string {
   let fileToObject: string[] = filePath.split(processSeparator);
-
+  debug(fileToObject.join(' '));
   if (dir) {
     const removalList: string[] = dir.split(processSeparator);
     fileToObject = fileToObject.filter((item) => !removalList.includes(item));
   }
-
+  debug(fileToObject.join(' '));
   if (prefix) {
     fileToObject.unshift(prefix);
   }
-
+  debug(fileToObject.join(' '));
   if (suffix) {
     fileToObject.push(suffix);
   }
-
+  debug(fileToObject.join(' '));
   const objectFile: string = fileToObject.join(posixSeparator);
 
   return objectFile;

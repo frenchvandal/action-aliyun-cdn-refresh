@@ -24024,16 +24024,20 @@ const credentials = new _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__.Co
 const client = new (_alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2___default())(credentials);
 function objectify(filePath, dir, prefix, suffix) {
     let fileToObject = filePath.split(processSeparator);
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
     if (dir) {
         const removalList = dir.split(processSeparator);
         fileToObject = fileToObject.filter((item) => !removalList.includes(item));
     }
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
     if (prefix) {
         fileToObject.unshift(prefix);
     }
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
     if (suffix) {
         fileToObject.push(suffix);
     }
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
     const objectFile = fileToObject.join(posixSeparator);
     return objectFile;
 }
