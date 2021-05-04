@@ -1,4 +1,4 @@
-import { endGroup, getInput, info, startGroup } from '@actions/core';
+import { debug, endGroup, getInput, info, startGroup } from '@actions/core';
 import { create, Globber } from '@actions/glob';
 import Client, {
   DescribeRefreshQuotaRequest,
@@ -46,6 +46,7 @@ function objectify(
 
   if (suffix) {
     fileToObject.push(suffix);
+    debug(`suffix: ${suffix}`);
   }
 
   const objectFile: string = fileToObject.join(posixSeparator);

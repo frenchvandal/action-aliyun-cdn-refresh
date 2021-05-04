@@ -24033,6 +24033,7 @@ function objectify(filePath, dir, prefix, suffix) {
     }
     if (suffix) {
         fileToObject.push(suffix);
+        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`suffix: ${suffix}`);
     }
     const objectFile = fileToObject.join(posixSeparator);
     return objectFile;
