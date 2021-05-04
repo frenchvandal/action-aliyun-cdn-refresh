@@ -81,6 +81,9 @@ function objectify(
         Number(RefreshQuotaResponse.body.urlRemain) || 0;
 
       let trailingSlash: string;
+
+      info(extname(file));
+
       if (!extname(file)) {
         trailingSlash = processSeparator;
       } else {
