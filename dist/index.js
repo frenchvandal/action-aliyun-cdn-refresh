@@ -24033,10 +24033,12 @@ function objectify(filePath, dir, prefix, suffix) {
     }
     if (suffix) {
         fileToObject.push(suffix);
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`suffix: ${suffix}`);
     }
     const objectFile = fileToObject.join(posixSeparator);
     return objectFile;
+}
+function myFunc(arg) {
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(arg);
 }
 (async () => {
     try {
@@ -24059,18 +24061,19 @@ function objectify(filePath, dir, prefix, suffix) {
             else {
                 trailingSlash = undefined;
             }
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`trailingSlash: ${trailingSlash}`);
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`file: ${file}`);
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`homeDir: ${homeDir}`);
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`cdnDomain: ${cdnDomain}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`trailingSlash: ${trailingSlash}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`file: ${file}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`homeDir: ${homeDir}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`cdnDomain: ${cdnDomain}`);
             const objectName = objectify(file, homeDir, cdnDomain, trailingSlash);
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`URL: ${objectName}`);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`URL: ${objectName}`);
             if (remainQuota) {
                 const refreshRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.RefreshObjectCachesRequest({
                     objectPath: objectName,
                 });
                 const refreshResponse = await client.refreshObjectCaches(refreshRequest);
                 (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(2)}%] refreshed: ${objectName} ${refreshResponse.body.refreshTaskId}`);
+                setTimeout(myFunc, 1500, 'just wait');
             }
             else {
                 (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Daily RefreshUrlQuota exceeded');

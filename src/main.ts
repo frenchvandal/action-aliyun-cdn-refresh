@@ -46,12 +46,15 @@ function objectify(
 
   if (suffix) {
     fileToObject.push(suffix);
-    debug(`suffix: ${suffix}`);
   }
 
   const objectFile: string = fileToObject.join(posixSeparator);
 
   return objectFile;
+}
+
+function myFunc(arg: string) {
+  info(arg);
 }
 
 (async (): Promise<void> => {
@@ -90,10 +93,10 @@ function objectify(
       } else {
         trailingSlash = undefined;
       }
-      info(`trailingSlash: ${trailingSlash}`);
-      info(`file: ${file}`);
-      info(`homeDir: ${homeDir}`);
-      info(`cdnDomain: ${cdnDomain}`);
+      debug(`trailingSlash: ${trailingSlash}`);
+      debug(`file: ${file}`);
+      debug(`homeDir: ${homeDir}`);
+      debug(`cdnDomain: ${cdnDomain}`);
 
       const objectName: string = objectify(
         file,
@@ -101,7 +104,7 @@ function objectify(
         cdnDomain,
         trailingSlash,
       );
-      info(`URL: ${objectName}`);
+      debug(`URL: ${objectName}`);
       if (remainQuota) {
         const refreshRequest = new RefreshObjectCachesRequest({
           objectPath: objectName,
@@ -114,6 +117,7 @@ function objectify(
             2,
           )}%] refreshed: ${objectName} ${refreshResponse.body.refreshTaskId}`,
         );
+        setTimeout(myFunc, 1500, 'just wait');
       } else {
         info('Daily RefreshUrlQuota exceeded');
         break;
