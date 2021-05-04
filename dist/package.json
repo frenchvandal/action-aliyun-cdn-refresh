@@ -1,0 +1,55 @@
+{
+  "name": "action-aliyun-cdn-refresh",
+  "description": "This GitHub Action uploads generated files to an OSS bucket",
+  "version": "1.0.0",
+  "main": "lib/main.js",
+  "engines": {
+    "node": ">=12.22.1",
+    "npm": ">=6.14.12"
+  },
+  "scripts": {
+    "build": "tsc && ncc build",
+    "lint": "eslint ./src/**/*.ts",
+    "lint:fix": "eslint --fix ./src/**/*.ts",
+    "format": "prettier --write **/*.ts **/*.json **/*.yaml",
+    "format:check": "prettier --check **/*.ts **/*.json **/*.yaml",
+    "pre-checkin": "concurrently \"npm:lint:fix\" \"npm:format\" \"npm:build\""
+  },
+  "repository": "github:frenchvandal/action-oss-upload",
+  "keywords": [
+    "actions",
+    "hugo",
+    "build",
+    "package",
+    "website",
+    "aliyun",
+    "alioss"
+  ],
+  "author": "frenchvandal",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.7",
+    "@actions/glob": "^0.1.1",
+    "@alicloud/cdn20180510": "^1.0.1",
+    "@alicloud/openapi-client": "^0.3.3",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@types/concurrently": "^6.0.1",
+    "@types/eslint": "^7.2.10",
+    "@types/eslint-plugin-prettier": "^3.1.0",
+    "@types/node": "^15.0.1",
+    "@types/prettier": "^2.2.3",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "@vercel/ncc": "^0.28.5",
+    "concurrently": "^6.0.2",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-github": "^4.1.3",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.4",
+    "typescript-formatter": "^7.2.2"
+  }
+}
