@@ -24050,8 +24050,9 @@ function objectify(filePath, dir, prefix, suffix) {
             const RefreshQuotaResponse = await client.describeRefreshQuota(RefreshQuotaRequest);
             const remainQuota = Number(RefreshQuotaResponse.body.urlRemain) || 0;
             let trailingSlash;
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)((0,path__WEBPACK_IMPORTED_MODULE_4__.extname)(file));
-            if (!(0,path__WEBPACK_IMPORTED_MODULE_4__.extname)(file)) {
+            const extension = (0,path__WEBPACK_IMPORTED_MODULE_4__.extname)(file);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`ext: ${extension}`);
+            if (!extension) {
                 trailingSlash = processSeparator;
             }
             else {

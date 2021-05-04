@@ -82,9 +82,9 @@ function objectify(
 
       let trailingSlash: string;
 
-      info(extname(file));
-
-      if (!extname(file)) {
+      const extension: string = extname(file);
+      info(`ext: ${extension}`);
+      if (!extension) {
         trailingSlash = processSeparator;
       } else {
         trailingSlash = '';
