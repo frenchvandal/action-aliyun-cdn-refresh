@@ -17992,8 +17992,8 @@ const kitx_1 = __importDefault(__nccwpck_require__(8683));
 const path_1 = __importDefault(__nccwpck_require__(5622));
 //const pkg = kitx_1.default.loadJSONSync(path_1.default.join(__dirname, '../../package.json'));
 exports.DEFAULT_UA = `AlibabaCloud (${os.platform()}; ${os.arch()}) ` +
-    `Node.js/${process.version} Core/DTC`;
-exports.DEFAULT_CLIENT = `Node.js(${process.version}), $TOTO: DTC`;
+    `Node.js/${process.version} Core/1.00`;
+exports.DEFAULT_CLIENT = `Node.js(${process.version}), SARRAS: TOTO`;
 //# sourceMappingURL=helper.js.map
 
 /***/ }),
@@ -24050,9 +24050,14 @@ function objectify(filePath, dir, prefix, suffix) {
             const RefreshQuotaResponse = await client.describeRefreshQuota(RefreshQuotaRequest);
             const remainQuota = Number(RefreshQuotaResponse.body.urlRemain) || 0;
             let trailingSlash;
-            if (!(0,path__WEBPACK_IMPORTED_MODULE_4__.extname)(file))
+            if (!(0,path__WEBPACK_IMPORTED_MODULE_4__.extname)(file)) {
                 trailingSlash = processSeparator;
+            }
+            else {
+                trailingSlash = '';
+            }
             const objectName = objectify(file, homeDir, cdnDomain, trailingSlash);
+            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`URL: ${objectName}`);
             if (remainQuota) {
                 const refreshRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.RefreshObjectCachesRequest({
                     objectPath: objectName,

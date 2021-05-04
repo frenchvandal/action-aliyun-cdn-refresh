@@ -80,8 +80,12 @@ function objectify(
       const remainQuota: number =
         Number(RefreshQuotaResponse.body.urlRemain) || 0;
 
-      let trailingSlash: string | undefined;
-      if (!extname(file)) trailingSlash = processSeparator;
+      let trailingSlash: string;
+      if (!extname(file)) {
+        trailingSlash = processSeparator;
+      } else {
+        trailingSlash = '';
+      }
 
       const objectName: string = objectify(
         file,
@@ -89,7 +93,7 @@ function objectify(
         cdnDomain,
         trailingSlash,
       );
-
+      info(`URL: ${objectName}`);
       if (remainQuota) {
         const refreshRequest = new RefreshObjectCachesRequest({
           objectPath: objectName,
