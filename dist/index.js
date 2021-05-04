@@ -24056,7 +24056,7 @@ function objectify(filePath, dir, prefix, suffix) {
                 trailingSlash = processSeparator;
             }
             else {
-                trailingSlash = '';
+                trailingSlash = undefined;
             }
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`trailingSlash: ${trailingSlash}`);
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`file: ${file}`);

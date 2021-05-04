@@ -87,7 +87,7 @@ function objectify(
       if (!extension) {
         trailingSlash = processSeparator;
       } else {
-        trailingSlash = '';
+        trailingSlash = undefined;
       }
       info(`trailingSlash: ${trailingSlash}`);
       info(`file: ${file}`);
