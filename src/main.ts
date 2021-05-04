@@ -100,7 +100,7 @@ function objectify(
         info(
           `\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(
             2,
-          )}%] refreshed: ${refreshResponse.body.refreshTaskId}`,
+          )}%] refreshed: ${objectName} ${refreshResponse.body.refreshTaskId}`,
         );
       } else {
         info('Daily RefreshUrlQuota exceeded');

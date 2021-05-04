@@ -25,4 +25,5 @@ inputs:
 
 runs:
   using: 'node12'
+  pre: 'dist/setup.js'
   main: 'dist/index.js'

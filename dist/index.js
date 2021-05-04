@@ -17993,7 +17993,7 @@ const path_1 = __importDefault(__nccwpck_require__(5622));
 //const pkg = kitx_1.default.loadJSONSync(path_1.default.join(__dirname, '../../package.json'));
 exports.DEFAULT_UA = `AlibabaCloud (${os.platform()}; ${os.arch()}) ` +
     `Node.js/${process.version} Core/DTC`;
-exports.DEFAULT_CLIENT = `Node.js(${process.version}), TOTO: DTC`;
+exports.DEFAULT_CLIENT = `Node.js(${process.version}), $TOTO: DTC`;
 //# sourceMappingURL=helper.js.map
 
 /***/ }),
@@ -24058,7 +24058,7 @@ function objectify(filePath, dir, prefix, suffix) {
                     objectPath: objectName,
                 });
                 const refreshResponse = await client.refreshObjectCaches(refreshRequest);
-                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(2)}%] refreshed: ${refreshResponse.body.refreshTaskId}`);
+                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(2)}%] refreshed: ${objectName} ${refreshResponse.body.refreshTaskId}`);
             }
             else {
                 (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Daily RefreshUrlQuota exceeded');
