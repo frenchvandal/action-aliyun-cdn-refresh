@@ -24034,12 +24034,8 @@ function objectify(filePath, dir, prefix, suffix) {
         fileToObject.unshift(prefix);
     }
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
-    if (suffix) {
-        fileToObject.push(suffix);
-    }
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
     const objectFile = fileToObject.join(posixSeparator);
-    return objectFile;
+    return `${objectFile}${suffix}`;
 }
 function myFunc(arg) {
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(arg);

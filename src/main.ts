@@ -44,13 +44,10 @@ function objectify(
     fileToObject.unshift(prefix);
   }
   debug(fileToObject.join(' '));
-  if (suffix) {
-    fileToObject.push(suffix);
-  }
-  debug(fileToObject.join(' '));
+
   const objectFile: string = fileToObject.join(posixSeparator);
 
-  return objectFile;
+  return `${objectFile}${suffix}`;
 }
 
 function myFunc(arg: string) {
