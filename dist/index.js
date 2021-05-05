@@ -24006,16 +24006,22 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6642);
 /* harmony import */ var _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(_alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(5622);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _alicloud_tea_typescript__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4165);
+/* harmony import */ var _alicloud_tea_typescript__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nccwpck_require__.n(_alicloud_tea_typescript__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _alicloud_tea_util__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(1979);
+/* harmony import */ var _alicloud_tea_util__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__nccwpck_require__.n(_alicloud_tea_util__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(5622);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
 
 
-const processSeparator = path__WEBPACK_IMPORTED_MODULE_4__.sep;
-const posixSeparator = path__WEBPACK_IMPORTED_MODULE_4__.posix.sep;
-const homeDir = (0,path__WEBPACK_IMPORTED_MODULE_4__.join)(process.cwd(), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('source', { required: false }) || 'public', processSeparator);
+
+
+const processSeparator = path__WEBPACK_IMPORTED_MODULE_6__.sep;
+const posixSeparator = path__WEBPACK_IMPORTED_MODULE_6__.posix.sep;
+const homeDir = (0,path__WEBPACK_IMPORTED_MODULE_6__.join)(process.cwd(), (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('source', { required: false }) || 'public', processSeparator);
 const cdnDomain = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('cdnDomain', { required: true });
 const credentials = new _alicloud_openapi_client__WEBPACK_IMPORTED_MODULE_3__.Config({
     accessKeyId: (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('accessKeyId', { required: true }),
@@ -24034,11 +24040,12 @@ function objectify(filePath, dir, prefix, suffix) {
         fileToObject.unshift(prefix);
     }
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
+    if (suffix) {
+        fileToObject.push(suffix);
+    }
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(fileToObject.join(' '));
     const objectFile = fileToObject.join(posixSeparator);
-    return `${objectFile}${suffix}`;
-}
-function myFunc(arg) {
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(arg);
+    return objectFile;
 }
 (async () => {
     try {
@@ -24052,28 +24059,24 @@ function myFunc(arg) {
             const RefreshQuotaRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.DescribeRefreshQuotaRequest({});
             const RefreshQuotaResponse = await client.describeRefreshQuota(RefreshQuotaRequest);
             const remainQuota = Number(RefreshQuotaResponse.body.urlRemain) || 0;
-            let trailingSlash;
-            const extension = (0,path__WEBPACK_IMPORTED_MODULE_4__.extname)(file);
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`ext: ${extension}`);
-            if (!extension) {
-                trailingSlash = processSeparator;
-            }
-            else {
-                trailingSlash = undefined;
-            }
-            (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`trailingSlash: ${trailingSlash}`);
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`file: ${file}`);
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`homeDir: ${homeDir}`);
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`cdnDomain: ${cdnDomain}`);
-            const objectName = objectify(file, homeDir, cdnDomain, trailingSlash);
+            let objectName = objectify(file, homeDir, cdnDomain);
+            if (!(0,path__WEBPACK_IMPORTED_MODULE_6__.extname)(file))
+                objectName = `${objectName}${posixSeparator}`;
             (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`URL: ${objectName}`);
             if (remainQuota) {
                 const refreshRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.RefreshObjectCachesRequest({
                     objectPath: objectName,
                 });
                 const refreshResponse = await client.refreshObjectCaches(refreshRequest);
-                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(2)}%] refreshed: ${objectName} ${refreshResponse.body.refreshTaskId}`);
-                setTimeout(myFunc, 1500, 'just wait');
+                const refreshTaskIdRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.DescribeRefreshTaskByIdRequest({
+                    taskId: refreshResponse.body.refreshTaskId,
+                });
+                const refreshTaskIdResponse = await client.describeRefreshTaskById(refreshTaskIdRequest);
+                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(_alicloud_tea_util__WEBPACK_IMPORTED_MODULE_5___default().toJSONString((0,_alicloud_tea_typescript__WEBPACK_IMPORTED_MODULE_4__.toMap)(refreshTaskIdResponse)));
+                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(2)}%] refreshed URL: ${objectName}`);
             }
             else {
                 (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)('Daily RefreshUrlQuota exceeded');

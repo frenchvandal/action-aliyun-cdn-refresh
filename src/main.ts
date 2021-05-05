@@ -3,10 +3,14 @@ import { create, Globber } from '@actions/glob';
 import Client, {
   DescribeRefreshQuotaRequest,
   DescribeRefreshQuotaResponse,
+  DescribeRefreshTaskByIdRequest,
+  DescribeRefreshTaskByIdResponse,
   RefreshObjectCachesRequest,
   RefreshObjectCachesResponse,
 } from '@alicloud/cdn20180510';
 import { Config } from '@alicloud/openapi-client';
+import { toMap } from '@alicloud/tea-typescript';
+import Util from '@alicloud/tea-util';
 import { extname, join, posix, sep } from 'path';
 
 const processSeparator: string = sep;
@@ -45,13 +49,13 @@ function objectify(
   }
   debug(fileToObject.join(' '));
 
+  if (suffix) {
+    fileToObject.push(suffix);
+  }
+  debug(fileToObject.join(' '));
   const objectFile: string = fileToObject.join(posixSeparator);
 
-  return `${objectFile}${suffix}`;
-}
-
-function myFunc(arg: string) {
-  info(arg);
+  return objectFile;
 }
 
 (async (): Promise<void> => {
@@ -81,40 +85,41 @@ function myFunc(arg: string) {
       const remainQuota: number =
         Number(RefreshQuotaResponse.body.urlRemain) || 0;
 
-      let trailingSlash: string | undefined;
-
-      const extension: string = extname(file);
-      info(`ext: ${extension}`);
-      if (!extension) {
-        trailingSlash = processSeparator;
-      } else {
-        trailingSlash = undefined;
-      }
-      debug(`trailingSlash: ${trailingSlash}`);
       debug(`file: ${file}`);
       debug(`homeDir: ${homeDir}`);
       debug(`cdnDomain: ${cdnDomain}`);
 
-      const objectName: string = objectify(
-        file,
-        homeDir,
-        cdnDomain,
-        trailingSlash,
-      );
+      let objectName: string = objectify(file, homeDir, cdnDomain);
+
+      if (!extname(file)) objectName = `${objectName}${posixSeparator}`;
+
       debug(`URL: ${objectName}`);
       if (remainQuota) {
-        const refreshRequest = new RefreshObjectCachesRequest({
-          objectPath: objectName,
-        });
+        const refreshRequest: RefreshObjectCachesRequest = new RefreshObjectCachesRequest(
+          {
+            objectPath: objectName,
+          },
+        );
         const refreshResponse: RefreshObjectCachesResponse = await client.refreshObjectCaches(
           refreshRequest,
         );
+
+        const refreshTaskIdRequest: DescribeRefreshTaskByIdRequest = new DescribeRefreshTaskByIdRequest(
+          {
+            taskId: refreshResponse.body.refreshTaskId,
+          },
+        );
+
+        const refreshTaskIdResponse: DescribeRefreshTaskByIdResponse = await client.describeRefreshTaskById(
+          refreshTaskIdRequest,
+        );
+        info(Util.toJSONString(toMap(refreshTaskIdResponse)));
+
         info(
           `\u001b[38;2;0;128;0m[${index}/${size}, ${percent.toFixed(
             2,
-          )}%] refreshed: ${objectName} ${refreshResponse.body.refreshTaskId}`,
+          )}%] refreshed URL: ${objectName}`,
         );
-        setTimeout(myFunc, 1500, 'just wait');
       } else {
         info('Daily RefreshUrlQuota exceeded');
         break;
