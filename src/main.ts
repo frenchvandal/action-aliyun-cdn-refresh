@@ -100,9 +100,12 @@ function objectify(
             objectPath: objectName,
           },
         );
+
         const refreshResponse: RefreshObjectCachesResponse = await client.refreshObjectCaches(
           refreshRequest,
         );
+
+        debug(`URL: ${refreshResponse.body.refreshTaskId}`);
 
         const refreshTaskIdRequest: DescribeRefreshTaskByIdRequest = new DescribeRefreshTaskByIdRequest(
           {

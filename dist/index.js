@@ -24071,6 +24071,7 @@ function objectify(filePath, dir, prefix, suffix) {
                     objectPath: objectName,
                 });
                 const refreshResponse = await client.refreshObjectCaches(refreshRequest);
+                (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.debug)(`URL: ${refreshResponse.body.refreshTaskId}`);
                 const refreshTaskIdRequest = new _alicloud_cdn20180510__WEBPACK_IMPORTED_MODULE_2__.DescribeRefreshTaskByIdRequest({
                     taskId: refreshResponse.body.refreshTaskId,
                 });
