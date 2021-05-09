@@ -3,14 +3,13 @@ import { create, Globber } from '@actions/glob';
 import Client, {
   DescribeRefreshQuotaRequest,
   DescribeRefreshQuotaResponse,
-  DescribeRefreshTaskByIdRequest,
-  DescribeRefreshTaskByIdResponse,
   RefreshObjectCachesRequest,
   RefreshObjectCachesResponse,
 } from '@alicloud/cdn20180510';
 import { Config } from '@alicloud/openapi-client';
 import { toMap } from '@alicloud/tea-typescript';
 import Util from '@alicloud/tea-util';
+import { EOL } from 'os';
 import { extname, join, posix, sep } from 'path';
 
 const processSeparator: string = sep;
@@ -33,47 +32,67 @@ const client: Client = new Client(credentials);
 
 function objectify(
   filePath: string,
+  splitSeparator: string,
+  joinSeparator?: string,
   dir?: string,
   prefix?: string,
   suffix?: string,
 ): string {
-  let fileToObject: string[] = filePath.split(processSeparator);
-  debug(fileToObject.join(' '));
+  let fileToObject: string[] = filePath.split(splitSeparator);
+
   if (dir) {
-    const removalList: string[] = dir.split(processSeparator);
+    const removalList: string[] = dir.split(splitSeparator);
     fileToObject = fileToObject.filter((item) => !removalList.includes(item));
   }
-  debug(fileToObject.join(' '));
+
   if (prefix) {
     fileToObject.unshift(prefix);
   }
-  debug(fileToObject.join(' '));
 
   if (suffix) {
     fileToObject.push(suffix);
   }
-  debug(fileToObject.join(' '));
-  const objectFile: string = fileToObject.join(posixSeparator);
+
+  if (!joinSeparator) joinSeparator = splitSeparator;
+
+  const objectFile: string = fileToObject.join(joinSeparator);
 
   return objectFile;
 }
 
 (async (): Promise<void> => {
   try {
-    let index = 0;
-    let percent = 0;
+    // let index = 0;
+    // let percent = 0;
 
     const uploadDir: Globber = await create(`${homeDir}`);
     const size: number = (await uploadDir.glob()).length;
-    const localFiles: AsyncGenerator<
-      string,
-      void,
-      unknown
-    > = uploadDir.globGenerator();
+    // const localFiles: AsyncGenerator<
+    //   string,
+    //   void,
+    //   unknown
+    // > = uploadDir.globGenerator();
+
+    const files: string[] = (await uploadDir.glob()).map((file) =>
+      objectify(file, processSeparator),
+    );
+
+    const URL: string = files.join(EOL);
 
     startGroup(`${size} objects to refresh`);
 
-    for await (const file of localFiles) {
+    const RefreshQuotaRequest: DescribeRefreshQuotaRequest = new DescribeRefreshQuotaRequest(
+      {},
+    );
+
+    const RefreshQuotaResponse: DescribeRefreshQuotaResponse = await client.describeRefreshQuota(
+      RefreshQuotaRequest,
+    );
+
+    const remainQuota: number =
+      Number(RefreshQuotaResponse.body.urlRemain) || 0;
+
+    /*     for await (const file of localFiles) {
       const RefreshQuotaRequest: DescribeRefreshQuotaRequest = new DescribeRefreshQuotaRequest(
         {},
       );
@@ -130,11 +149,11 @@ function objectify(
 
       index += 1;
       percent = (index / size) * 100;
-    }
+    } */
 
     endGroup();
 
-    info(`${index} URL refreshed`);
+    //info(`${index} URL refreshed`);
   } catch (error) {
     const { setFailed } = await import('@actions/core');
     setFailed(error.message);

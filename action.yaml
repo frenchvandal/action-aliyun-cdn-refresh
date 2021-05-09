@@ -25,4 +25,4 @@ inputs:
 
 runs:
   using: 'node12'
-  main: 'dist/index.js'
+  main: 'dist/dist/index.js'
