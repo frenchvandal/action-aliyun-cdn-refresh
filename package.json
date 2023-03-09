@@ -28,7 +28,7 @@
   "author": "frenchvandal",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.7",
+    "@actions/core": "^1.9.1",
     "@actions/glob": "^0.1.1",
     "@alicloud/cdn20180510": "^1.0.1",
     "@alicloud/openapi-client": "^0.3.3",
